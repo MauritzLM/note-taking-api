@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <!-- Standard meta tags -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="height=device-height,
+                      width=device-width, initial-scale=1.0,
+                      minimum-scale=1.0, maximum-scale=1.0,
+                      user-scalable=no, target-densitydpi=device-dpi">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+
+    {% block extrahead %}{% endblock %}
+    <link href="{{ url_for('static', path='/index.css') }}" rel="stylesheet">
+
+    {% block title %}
+      <title>Note App</title>
+    {% endblock %}
+
+  </head>
+  <body>
+  {% block content %}
+    
+  {% endblock %}
+
+  </body>
+</html>
