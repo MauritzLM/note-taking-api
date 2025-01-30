@@ -1,13 +1,14 @@
 # auth models
 from sqlalchemy import Column, Integer, String, Boolean
-from core.config import Base
+from sqlalchemy.dialects.postgresql import UUID
+from app.core.config import Base
 import uuid
 
 class User(Base):
     __tablename__ = 'user_account'
 
-    id: int = Column(Integer, default=uuid.uuid4, primary_key=True, index=True)
-    name: str = Column(String(30), index=True)
-    password: str = Column(String(255))
-    email: str = Column(String(255))
+    id: uuid.UUID = Column(UUID(as_uuid=True), default=uuid.uuid4, primary_key=True, index=True)
+    username: str = Column(String(30), index=True)
+    password: str = Column(String(40))
+    email: str = Column(String(255), unique=True)
 
