@@ -5,6 +5,7 @@ from app.models.user import User
 from app.models.note import Note
 from app.core.security import get_current_user
 from app.routes.deps import db_dependency
+import datetime
 
 router = APIRouter(prefix='/notes')
 
@@ -22,9 +23,10 @@ class PublicNote(BaseModel):
     text: str
     isArchived: bool
     tags: list[str]
+ 
+class NoteId(BaseModel):
+    id: UUID4
 
-class NoteDelete(BaseModel):
-    id: UUID4   
 
 # read note
 @router.post('/')
@@ -56,7 +58,7 @@ async def create_note(session: db_dependency, note: NoteCreate, current_user: An
 async def update_note(session: db_dependency, current_note: PublicNote, current_user: Annotated[User, Depends(get_current_user)]):
     # check if any changes?*
     try:
-        session.query(Note).filter(Note.id == current_note.id).update({ Note.isArchived: current_note.isArchived, Note.tags: current_note.tags.copy(), Note.text: current_note.text, Note.title: current_note.title })
+        session.query(Note).filter(Note.id == current_note.id).update({ Note.isArchived: current_note.isArchived, Note.tags: current_note.tags.copy(), Note.text: current_note.text, Note.title: current_note.title, Note.date: datetime.datetime.now() })
         session.commit()
     
     except:
@@ -66,8 +68,28 @@ async def update_note(session: db_dependency, current_note: PublicNote, current_
 
 # archive note
 @router.put('/archive')
-async def archive_note():
-    ...
+async def archive_note(session: db_dependency, current_note: NoteId, current_user: Annotated[User, Depends(get_current_user)]):
+    try:
+        session.query(Note).filter(Note.id == current_note.id).update({ Note.isArchived: True })
+        session.commit()
+
+    except:
+        return {"details": "An error occured"}    
+    
+    return {"details": "note archived"}
+
+# restore note
+@router.put('/restore')
+async def archive_note(session: db_dependency, current_note: NoteId, current_user: Annotated[User, Depends(get_current_user)]):
+    try:
+        session.query(Note).filter(Note.id == current_note.id).update({ Note.isArchived: False })
+        session.commit()
+
+    except:
+        return { "details": "An error occured" }    
+    
+    return { "details": "note restored" }
+
 
 # get all notes
 @router.get('/all', response_model=list[PublicNote])
@@ -77,11 +99,9 @@ async def get_all_notes(session: db_dependency, current_user: Annotated[User, De
     return all_notes
 
 
-# get all archived notes
-
 # delete note
-@router.delete('/delete')
-async def delete_note(session: db_dependency, current_note: NoteDelete, current_user: Annotated[User, Depends(get_current_user)]):
+@router.post('/delete')
+async def delete_note(session: db_dependency, current_note: NoteId, current_user: Annotated[User, Depends(get_current_user)]):
     try:
         session.query(Note).filter(Note.id == current_note.id).delete()
         session.commit()
