@@ -50,7 +50,7 @@ async def create_user(session: db_dependency, user_create: UserCreate):
 
 # login
 @router.post('/login')
-async def login_user(session: db_dependency, form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> Token:
+async def login_user(session: db_dependency, form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
     # authenticate user
     current_user = session.query(User).filter(User.username == form_data.username).first()
     if not current_user:
@@ -75,7 +75,7 @@ async def login_user(session: db_dependency, form_data: Annotated[OAuth2Password
         data={"sub": current_user.username, "color_theme": current_user.color_theme, "font_theme": current_user.font_theme}, expires_delta=access_token_expires
     )
 
-    return Token(access_token=access_token, token_type="bearer")
+    return { 'details': { 'username': current_user.username, 'font': current_user.font_theme, 'theme': current_user.color_theme } , 'token': Token(access_token=access_token, token_type="bearer") }
 
 
 # update color_theme / font_theme
@@ -112,6 +112,10 @@ async def update_font_theme(session: db_dependency, theme: UserFont, current_use
 
     return {"details": "font theme updated"}
 
+# update password*
+
+
 # password reset*
+
 
 # google auth*
