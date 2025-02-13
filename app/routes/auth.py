@@ -53,6 +53,9 @@ async def create_user(session: db_dependency, user_create: UserCreate):
     # decode hashed password
     current_user.password = get_password_hash(user_create.password).decode('utf8')
     current_user.username = user_create.username
+    # default themes
+    current_user.color_theme = 'system'
+    current_user.font_theme = 'sans-serif'
 
     session.add(current_user)
     session.commit()
