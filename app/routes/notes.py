@@ -23,6 +23,7 @@ class PublicNote(BaseModel):
     text: str
     isArchived: bool
     tags: list[str]
+    date: datetime.datetime
  
 class NoteId(BaseModel):
     id: UUID4
