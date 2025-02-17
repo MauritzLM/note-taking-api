@@ -8,11 +8,10 @@ from app.core.config import engine
 from fastapi.middleware.cors import CORSMiddleware
 
 
-
 app = FastAPI()
 users.Base.metadata.create_all(bind=engine)
 
-origins = ['http://localhost']
+origins = ['http://localhost:5173']
 
 app.add_middleware(
     CORSMiddleware,
@@ -24,7 +23,3 @@ app.add_middleware(
 
 app.include_router(notes.router)
 app.include_router(auth.router)
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
-
-
