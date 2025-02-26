@@ -9,7 +9,7 @@ class User(Base):
 
     id: uuid.UUID = Column(UUID(as_uuid=True), default=uuid.uuid4, primary_key=True, index=True)
     username: str = Column(String(30), index=True)
-    password: str = Column(String(40))
+    password: str = Column(String(255))
     email: str = Column(String(255), unique=True)
     color_theme: str = Column(String(10),)
     font_theme: str = Column(String(10))
