@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 users.Base.metadata.create_all(bind=engine)
 
-origins = ['http://localhost:5173']
+origins = ['http://localhost:5173', 'https://note-app-client-pearl.vercel.app']
 
 app.add_middleware(
     CORSMiddleware,
