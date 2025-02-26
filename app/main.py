@@ -7,7 +7,6 @@ import app.models.user as users
 from app.core.config import engine
 from fastapi.middleware.cors import CORSMiddleware
 
-
 app = FastAPI()
 users.Base.metadata.create_all(bind=engine)
 
