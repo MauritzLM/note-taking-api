@@ -47,11 +47,14 @@ async def create_note(session: db_dependency, note: NoteCreate, current_user: An
         session.add(new_note)
         session.commit()
         session.refresh(new_note)
+
+        # get created note and return it
+        created_note = session.query(Note).filter(Note.title == note.title).first()
     
     except:
         return {"details": "An error occured"}
 
-    return {"details": "Note created"}
+    return {"details": "Note created", "note": created_note}
 
 
 # update note
