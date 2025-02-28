@@ -86,7 +86,7 @@ async def login_user(session: db_dependency, form_data: Annotated[OAuth2Password
         )
     
     # create access token
-    access_token_expires = timedelta(minutes=30)
+    access_token_expires = timedelta(minutes=60)
     access_token = create_access_token(
         data={"sub": current_user.username, "color_theme": current_user.color_theme, "font_theme": current_user.font_theme}, expires_delta=access_token_expires
     )
